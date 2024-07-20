@@ -92,27 +92,29 @@ async def rule_cmd_player(message: types.Message):
             game.dealer.get_card(game.deck)
             result = game.check_win()
             chat_id = message.from_user.id
-            if 'выиграл' or 'победил' in result:
+            if 'выиграл' in result or 'победил' in result:
                 user_stats_info.update_statistics(chat_id, won=True)
-            game = None
+            elif 'проиграл' in result:
+                user_stats_info.update_statistics(chat_id, won=False)
             await message.answer(result, reply_markup=reply.game_again.as_markup(resize_keyboard=True))
+            game = None
     else:
         await message.answer("Игра не начата!!!")
 
 
-@user_private_router.message(F.text.lower() == "⛔️ стоп")
+@user_private_router.message(F.text.lower() == "⛔️ хватит")
 async def rule_cmd_dealer(message: types.Message):
     global game
     if game is not None:
         game.dealer.get_card(game.deck)
         result = game.check_win()
         chat_id = message.from_user.id
-        if 'проиграл' in result:
-            user_stats_info.update_statistics(chat_id, won=False)
-        if 'выиграл' in result:
+        if 'выиграл' in result or 'победил' in result:
             user_stats_info.update_statistics(chat_id, won=True)
-        game = None
+        elif "проиграл" in result:
+            user_stats_info.update_statistics(chat_id, won=False)
         await message.answer(result, reply_markup=reply.game_again.as_markup(resize_keyboard=True))
+        game = None
     else:
 
         await message.answer_sticker(sticker="CAACAgQAAxkBAAEGwORmjELG_M5ZUJn3t6PylTyMvni8MgACqQ8AAmkbmVK7ELRWhclWgzUE")

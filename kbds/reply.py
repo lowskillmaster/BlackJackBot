@@ -11,7 +11,7 @@ bot_kb.add(
 game_kb = ReplyKeyboardBuilder()
 game_kb.add(
     KeyboardButton(text="🫳 Взять карту")
-    , KeyboardButton(text="⛔️ Стоп")
+    , KeyboardButton(text="⛔️ Хватит")
 
 )
 game_kb.adjust(2)
